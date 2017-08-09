@@ -31,10 +31,10 @@ public class domo {
 	@BeforeTest
 	public void setBaseUrl() throws InterruptedException {
 		System.setProperty("webdriver.chrome.driver", "C:/Program Files/chromedriver.exe");
-		WebDriver driver = new ChromeDriver();
-		driver.get("https://arval:Estate2017@alb-frontadmin-valid-1-carenet.a-4-me.net/login");
-		driver.navigate().to("https://alb-frontadmin-valid-1-carenet.a-4-me.net/login");
-
+		driver = new ChromeDriver();
+		driver.get("https://arval:Estate2017@alb-it-frontadmin-dev-1-carenet.a-4-me.net/login");
+		driver.navigate().to("https://alb-it-frontadmin-dev-1-carenet.a-4-me.net/login");
+		Thread.sleep(5000);
 		 /*ProfilesIni profile = new ProfilesIni(); FirefoxProfile ffProfile =
 		 * profile.getProfile("default");
 		 * ffProfile.setAcceptUntrustedCertificates(true);
@@ -53,7 +53,6 @@ public class domo {
 	}
 
 	@Test
-
 	public void uploadFile() throws InterruptedException {
 		WebElement usrn = driver.findElement(By.id("tfid-17-0"));
 		usrn.sendKeys("ekino@test.com");
@@ -62,22 +61,21 @@ public class domo {
 		pwd.sendKeys("12345678");
 		Thread.sleep(5000);
 		pwd.submit();
-		Thread.sleep(5000); //
-		driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS); //
-		Thread.sleep(5000);
+		driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, 10);
-		WebElement a = wait
-				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@class='pt-popover-target']")));
+		WebElement a = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@class='pt-popover-target']")));
 		String b = a.getText();
 		System.out.println(b);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='import-addon']"))).click();
-		Actions ac2 = new Actions(driver);
-		ac2.sendKeys("C://Tow truck file - Copy.xlsx");
-		ac2.sendKeys(Keys.ENTER);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='import-addon']")));
+		driver.findElement(By.xpath("//label[@for='import-addon']")).sendKeys("C:/Users/thanh-luan.do/Downloads/Test.xlsx");
+		//Actions ac = new Actions(driver);
+		//ac.sendKeys("C:\\Users\\thanh-luan.do\\Downloads\\Test.xlsx");
+		//ac.sendKeys(Keys.ENTER);
 		WebElement c = wait.until(
 				ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='pt-callout pt-intent-danger']")));
 		String d = c.getText();
 		System.out.println(d);
+		Thread.sleep(2000);
 	}
 	/*
 	 * public class LoginWindow implements Runnable {
@@ -114,6 +112,6 @@ public class domo {
 
 	@AfterTest
 	public void afterTest() {
-		driver.quit();
+		driver.close();
 	}
 }
