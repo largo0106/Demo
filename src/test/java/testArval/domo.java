@@ -1,5 +1,6 @@
 package testArval;
 
+import java.awt.AWTException;
 import java.awt.Desktop.Action;
 import java.awt.Robot;
 import java.awt.Toolkit;
@@ -34,7 +35,7 @@ public class domo {
 		driver = new ChromeDriver();
 		driver.get("https://arval:Estate2017@alb-it-frontadmin-dev-1-carenet.a-4-me.net/login");
 		driver.navigate().to("https://alb-it-frontadmin-dev-1-carenet.a-4-me.net/login");
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 		 /*ProfilesIni profile = new ProfilesIni(); FirefoxProfile ffProfile =
 		 * profile.getProfile("default");
 		 * ffProfile.setAcceptUntrustedCertificates(true);
@@ -53,33 +54,43 @@ public class domo {
 	}
 
 	@Test
-	public void uploadFile() throws InterruptedException {
+	public void uploadFile() throws InterruptedException, AWTException {
 		WebElement usrn = driver.findElement(By.id("tfid-17-0"));
 		usrn.sendKeys("ekino@test.com");
-		Thread.sleep(5000);
 		WebElement pwd = driver.findElement(By.id("tfid-17-1"));
 		pwd.sendKeys("12345678");
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 		pwd.submit();
 		driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		WebElement a = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@class='pt-popover-target']")));
 		String b = a.getText();
 		System.out.println(b);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='import-addon']")));
-		driver.findElement(By.xpath("//label[@for='import-addon']")).sendKeys("C:/Users/thanh-luan.do/Downloads/Test.xlsx");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[@for='import-addon']"))).click();
+		//String filePath = System.getProperty("user.dir") + "/Downloads/Test.xlsx";
+		Robot rb = new Robot();
+		StringSelection filePath = new StringSelection("C:\\Test.xlsx");
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(filePath, null);
+		rb.keyPress(KeyEvent.VK_CONTROL);
+		rb.keyPress(KeyEvent.VK_V);
+	 	rb.keyRelease(KeyEvent.VK_V);
+	 	rb.keyRelease(KeyEvent.VK_CONTROL);
+	 	Thread.sleep(2000);
+	 	rb.keyPress(KeyEvent.VK_ENTER);
+		rb.keyRelease(KeyEvent.VK_ENTER);
+		Thread.sleep(1000);
 		//Actions ac = new Actions(driver);
 		//ac.sendKeys("C:\\Users\\thanh-luan.do\\Downloads\\Test.xlsx");
+		WebElement btnUpld = driver.findElement(By.xpath("//button[contains(@class, 'upload-file__btn') and not(@disabled='')]"));
+		btnUpld.click();
 		//ac.sendKeys(Keys.ENTER);
-		WebElement c = wait.until(
-				ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='pt-callout pt-intent-danger']")));
+		WebElement c = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@class='pt-toast-message']")));
 		String d = c.getText();
 		System.out.println(d);
 		Thread.sleep(2000);
 	}
-	/*
-	 * public class LoginWindow implements Runnable {
-	 * 
+	
+	 /*public class LoginWindow implements Runnable {
 	 * @Override public void run() { try { login(); } catch (Exception ex) {
 	 * System.out.println("Error in Login Thread: " + ex.getMessage()); } }
 	 * 
@@ -89,22 +100,24 @@ public class domo {
 	 * 
 	 * //create robot for keyboard operations Robot rb = new Robot();
 	 * 
-	 * //Enter user name by ctrl-v StringSelection username = new
-	 * StringSelection("arval");
-	 * Toolkit.getDefaultToolkit().getSystemClipboard().setContents(username,
-	 * null); rb.keyPress(KeyEvent.VK_CONTROL); rb.keyPress(KeyEvent.VK_V);
-	 * rb.keyRelease(KeyEvent.VK_V); rb.keyRelease(KeyEvent.VK_CONTROL);
+	 * //Enter user name by ctrl-v
+	 * StringSelection username = new StringSelection("arval");
+	 * Toolkit.getDefaultToolkit().getSystemClipboard().setContents(username, null);
+	 	rb.keyPress(KeyEvent.VK_CONTROL); rb.keyPress(KeyEvent.VK_V);
+	 	rb.keyRelease(KeyEvent.VK_V); rb.keyRelease(KeyEvent.VK_CONTROL);
 	 * 
-	 * //tab to password entry field rb.keyPress(KeyEvent.VK_TAB);
+	 * //tab to password entry field
+	 * rb.keyPress(KeyEvent.VK_TAB);
 	 * rb.keyRelease(KeyEvent.VK_TAB); Thread.sleep(2000);
 	 * 
-	 * //Enter password by ctrl-v StringSelection pwd = new
-	 * StringSelection("12345678");
+	 * //Enter password by ctrl-v
+	 * StringSelection pwd = new StringSelection("12345678");
 	 * Toolkit.getDefaultToolkit().getSystemClipboard().setContents(pwd, null);
 	 * rb.keyPress(KeyEvent.VK_CONTROL); rb.keyPress(KeyEvent.VK_V);
 	 * rb.keyRelease(KeyEvent.VK_V); rb.keyRelease(KeyEvent.VK_CONTROL);
 	 * 
-	 * //press enter rb.keyPress(KeyEvent.VK_ENTER);
+	 * //press enter
+	 * rb.keyPress(KeyEvent.VK_ENTER);
 	 * rb.keyRelease(KeyEvent.VK_ENTER);
 	 * 
 	 * //wait Thread.sleep(5000); } }
